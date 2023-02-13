@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "coffee-and-wifi"
+version = "0.1.0"
+description = "Website for sharing data about coffee shops."
+authors = ["Igor Ferreira <iferreira.n01@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^2.2.2"
+flask-wtf = "^1.1.1"
+bootstrap-flask = "^2.2.0"
+python-dotenv = "^0.21.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
