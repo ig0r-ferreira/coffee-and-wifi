@@ -26,7 +26,6 @@ class CafeForm(FlaskForm):
 # ---------------------------------------------------------------------------
 
 
-# all Flask routes below
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -46,10 +45,6 @@ def add_cafe():
 @app.route('/cafes')
 def cafes():
     with open('data/cafes.csv', newline='', encoding='utf-8') as csv_file:
-        rows = list(csv.reader(csv_file, delimiter=','))
-
-    return render_template('cafes.html', cafes=rows)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        reader = csv.DictReader(csv_file, delimiter=',')
+        rows = list(reader)
+    return render_template('cafes.html', cafes=rows, headers=reader.fieldnames)

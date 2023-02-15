@@ -1,5 +1,5 @@
 {% extends 'base.html' %} 
-{% block title %}Restaurants{% endblock title %}
+{% block title %}Coffee Shops{% endblock title %}
 {% block content %}
     <div class="container">
         <div class="row">
@@ -7,12 +7,26 @@
                 <h1>All Cafes</h1>
 
                 <table class="table">
-                    <!-- This is where you will write the code 
-                    to render a Bootstrap Table that contains all 
-                    the information from the cafe-data.csv file. -->
+                    <tr>
+                        {% for header in headers %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for cafe in cafes %}
+                        <tr>
+                            {% for info in headers %}
+                                <td>
+                                    {% if cafe[info].startswith('http') %}
+                                        <a href="{{ cafe[info] }}">Click here</a>
+                                    {% else %}
+                                        {{ cafe[info] }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
                 </table>
-
-                <p><a href="#">Return to index page</a></p>
+                <p><a href="{{ url_for('home') }}">Return to home page</a></p>
             </div>
         </div>
     </div>
