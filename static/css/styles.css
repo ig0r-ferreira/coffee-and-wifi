@@ -2,12 +2,23 @@
 your web pages for the styles to be rendered. */
 
 body {
+    min-height: 100vh;
     background-color: #333;
     color: white;
 }
 
 a {
     color: #ffc107;
+    text-decoration: none;
+}
+
+th,
+td {
+    color: white;
+}
+
+.container {
+    padding: 2rem;
 }
 
 .jumbotron {
