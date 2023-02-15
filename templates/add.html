@@ -1,15 +1,29 @@
-{% extends 'base.html' %} 
-{% block title %}Add A New Cafe{% endblock title %} 
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form_row %}
+{% block title %}Add a New Cafe{% endblock title %} 
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-md-8">
-                <h1>Add a new cafe into the database</h1>
-
-                <!-- This is where your WTForm will go -->
-
-                <p class="space-above"><a href="#">See all cafes</a></p>
-            </div>
-        </div>
+        <h1>Add a new cafe into the database</h1>
+        <form action="{{ url_for('add_cafe') }}" method="post" novalidate>
+            {{ form.csrf_token() }}
+            {{ render_form_row([form.cafe_name, form.cafe_location_url]) }}
+            {{ 
+                render_form_row(
+                    [
+                        form.opening_time, form.closing_time, form.coffee_rating, 
+                        form.wifi_rating, form.power_rating
+                    ], 
+                    col_map={
+                        'opening_time': 'col-lg-3', 
+                        'closing_time': 'col-lg-3',
+                        'coffee_rating': 'col-lg-2',
+                        'wifi_rating': 'col-lg-2',
+                        'power_rating': 'col-lg-2'
+                    },
+                ) 
+            }}
+            {{ render_form_row([form.submit]) }} 
+        </form>
+        <p class="space-above"><a href="{{ url_for('cafes') }}">See all cafes</a></p>    
     </div>
 {% endblock content %}
