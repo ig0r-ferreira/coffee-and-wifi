@@ -6,7 +6,7 @@
         <h1>Add a new cafe into the database</h1>
         <form action="{{ url_for('add_cafe') }}" method="post" novalidate>
             {{ form.csrf_token() }}
-            {{ render_form_row([form.cafe_name, form.cafe_location_url]) }}
+            {{ render_form_row([form.cafe_name, form.cafe_location]) }}
             {{ 
                 render_form_row(
                     [

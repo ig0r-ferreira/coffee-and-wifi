@@ -1,6 +1,7 @@
 import csv
+from typing import Any
 
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, render_template, request, url_for
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from wtforms import SelectField, StringField, SubmitField, TimeField, URLField
@@ -17,7 +18,7 @@ def generate_rating(symbol: str):
 
 class CafeForm(FlaskForm):
     cafe_name = StringField('Cafe Name', validators=[InputRequired()])
-    cafe_location_url = URLField(
+    cafe_location = URLField(
         'Cafe Location on Google Maps (URL)', validators=[InputRequired()]
     )
     opening_time = TimeField('Opening Time', validators=[InputRequired()])
@@ -32,6 +33,14 @@ class CafeForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+def save_to_csv(form: dict[str, Any]) -> None:
+    with open(
+        'data/cafes.csv', mode='a', encoding='utf-8', newline=''
+    ) as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=form.keys())
+        writer.writerow(form)
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -41,6 +50,11 @@ def home():
 def add_cafe():
     form = CafeForm()
     if form.validate_on_submit():
+        form_data = request.form.copy()
+        form_data.pop('csrf_token', None)
+
+        save_to_csv(form_data)
+
         return redirect(url_for('cafes'))
 
     return render_template('add.html', form=form)
