@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container">
         <h1>Add a new cafe into the database</h1>
-        <form action="{{ url_for('add_cafe') }}" method="post" novalidate>
+        <form action="{{ url_for('ui.add_cafe') }}" method="post" novalidate>
             {{ form.csrf_token() }}
             {{ render_form_row([form.cafe_name, form.cafe_location]) }}
             {{ 
@@ -24,6 +24,6 @@
             }}
             {{ render_form_row([form.submit]) }} 
         </form>
-        <p class="space-above"><a href="{{ url_for('cafes') }}">See all cafes</a></p>    
+        <p class="space-above"><a href="{{ url_for('ui.cafes') }}">See all cafes</a></p>    
     </div>
 {% endblock content %}
