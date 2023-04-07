@@ -3,8 +3,8 @@ from wtforms import SelectField, StringField, SubmitField, TimeField, URLField
 from wtforms.validators import InputRequired
 
 
-def generate_rating(symbol: str):
-    return ['❌', *(symbol * num for num in range(1, 6))]
+def generate_rating(symbol: str) -> list[tuple[int, str]]:
+    return [(0, '❌'), *((num, symbol * num) for num in range(1, 6))]
 
 
 class CafeForm(FlaskForm):

@@ -1,7 +1,7 @@
 from flask import Flask
 
 from coffee_and_wifi.blueprints import user_interface
-from coffee_and_wifi.extensions import appearance
+from coffee_and_wifi.extensions import appearance, database
 
 
 def create_app() -> Flask:
@@ -10,4 +10,5 @@ def create_app() -> Flask:
 
     user_interface.init_app(app)
     appearance.init_app(app)
+    database.init_app(app)
     return app

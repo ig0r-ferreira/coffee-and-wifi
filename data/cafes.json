@@ -1,0 +1,40 @@
+{
+    "_default": {
+        "1": {
+            "name": "Lighthaus",
+            "location": "https://goo.gl/maps/2EvhB4oq4gyUXKXx9",
+            "opening_time": "11:00",
+            "closing_time": "15:30",
+            "coffee_rating": 4,
+            "wifi_rating": 2,
+            "power_rating": 3
+        },
+        "2": {
+            "name": "Esters",
+            "location": "https://goo.gl/maps/13Tjc36HuPWLELaSA",
+            "opening_time": "08:00",
+            "closing_time": "15:00",
+            "coffee_rating": 4,
+            "wifi_rating": 3,
+            "power_rating": 1
+        },
+        "3": {
+            "name": "Ginger & White",
+            "location": "https://goo.gl/maps/DqMx2g5LiAqv3pJQ9",
+            "opening_time": "07:30",
+            "closing_time": "17:30",
+            "coffee_rating": 3,
+            "wifi_rating": 0,
+            "power_rating": 1
+        },
+        "4": {
+            "name": "Mare Street Market",
+            "location": "https://goo.gl/maps/ALR8iBiNN6tVfuAA8",
+            "opening_time": "08:00",
+            "closing_time": "13:00",
+            "coffee_rating": 2,
+            "wifi_rating": 3,
+            "power_rating": 3
+        }
+    }
+}
