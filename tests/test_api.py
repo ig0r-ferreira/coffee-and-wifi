@@ -33,3 +33,14 @@ def test_get_random_coffee_should_return_null_when_database_is_empty(
 
     assert response.status_code == 200
     assert result.get('cafe') is None
+
+
+def test_get_all_cafes(app: Flask, client: FlaskClient) -> None:
+    response = client.get('/api/v1/cafes')
+    result = response.json or {}
+
+    with app.app_context():
+        all_cafes = get_database().all()
+
+    assert 'cafes' in result
+    assert result['cafes'] == all_cafes

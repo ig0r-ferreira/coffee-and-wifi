@@ -15,3 +15,8 @@ def get_random_cafe() -> ResponseReturnValue:
     if cafes:
         cafe = random.choice(cafes)
     return jsonify({'cafe': cafe})
+
+
+@api.get('/cafes')
+def get_all_cafes() -> ResponseReturnValue:
+    return jsonify({'cafes': get_database().all()})
