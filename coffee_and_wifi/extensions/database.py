@@ -1,10 +1,10 @@
-from flask import Flask, g
+from flask import Flask, current_app, g
 from tinydb import TinyDB
 
 
 def get_database() -> TinyDB:
     if not hasattr(g, '_database'):
-        g._database = TinyDB('data/cafes.json', encoding='utf-8')
+        g._database = TinyDB(current_app.config['DATABASE_PATH'])
 
     return g._database
 
