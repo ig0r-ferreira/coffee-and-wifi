@@ -34,7 +34,7 @@ def cafes() -> list[dict[str, Any]]:
     ]
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def app() -> Generator[Flask, Any, Any]:
     os.environ['ENV'] = 'testing'
 
@@ -51,6 +51,6 @@ def app() -> Generator[Flask, Any, Any]:
         get_database().truncate()
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def client(app: Flask) -> FlaskClient:
     return app.test_client()
