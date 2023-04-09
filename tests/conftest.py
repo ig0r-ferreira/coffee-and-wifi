@@ -14,8 +14,8 @@ from coffee_and_wifi.models import Cafe
 def cafes() -> list[dict[str, Any]]:
     return [
         Cafe(
-            cafe_name='Cafe 1',
-            cafe_location=parse_obj_as(HttpUrl, 'https://cafe-1.com'),
+            name='Cafe 1',
+            location=parse_obj_as(HttpUrl, 'https://cafe-1.com'),
             opening_time='07:00',
             closing_time='10:00',
             coffee_rating=5,
@@ -23,8 +23,8 @@ def cafes() -> list[dict[str, Any]]:
             power_rating=5,
         ).dict(),
         Cafe(
-            cafe_name='Cafe 2',
-            cafe_location=parse_obj_as(HttpUrl, 'https://cafe-2.com'),
+            name='Cafe 2',
+            location=parse_obj_as(HttpUrl, 'https://cafe-2.com'),
             opening_time='18:00',
             closing_time='22:00',
             coffee_rating=4,

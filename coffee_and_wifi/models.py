@@ -9,3 +9,6 @@ class Cafe(BaseModel):
     coffee_rating: int
     wifi_rating: int
     power_rating: int
+
+    class Config:
+        allow_population_by_field_name = True

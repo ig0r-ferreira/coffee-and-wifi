@@ -1,10 +1,10 @@
 from flask import Flask, current_app, g
-from tinydb import TinyDB
+from tinydb import *
 
 
 def get_database() -> TinyDB:
     if not hasattr(g, '_database'):
-        g._database = TinyDB(current_app.config['DATABASE_PATH'])
+        g._database = TinyDB(current_app.config['DATABASE_PATH'], indent=4)
 
     return g._database
 
