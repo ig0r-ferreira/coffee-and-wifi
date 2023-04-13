@@ -187,3 +187,25 @@ def test_update_cafe_when_an_id_is_provided_should_not_change_the_id(
     assert response.status_code == 403
     assert 'errors' in result
     assert result['errors'][0] == 'The cafe id cannot be changed.'
+
+
+def test_delete_an_existing_cafe_should_return_code_200(
+    client: FlaskClient,
+) -> None:
+    id = 2
+    response = client.delete(f'/api/v1/cafes/{id}')
+
+    assert response.status_code == 204
+    with db_wrapper.database:
+        assert Cafe.get_or_none(id) is None
+
+
+def test_delete_cafe_with_a_non_existing_id_should_return_error_404(
+    client: FlaskClient,
+) -> None:
+    id = 5
+    response = client.delete(f'/api/v1/cafes/{id}')
+    result = response.json or {}
+
+    assert response.status_code == 404
+    assert result['errors'][0] == 'Cafe not found.'

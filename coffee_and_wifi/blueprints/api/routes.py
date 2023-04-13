@@ -85,3 +85,17 @@ def update_cafe(id: str) -> ResponseReturnValue:
 
     cafe.save()
     return Response(status=204)
+
+
+@api.delete('/cafes/<id>')
+def delete_cafe(id: str) -> ResponseReturnValue:
+    with db_wrapper.database:
+        cafe = Cafe.get_or_none(int(id))
+
+    if cafe is None:
+        return jsonify(errors=['Cafe not found.']), 404
+
+    with db_wrapper.database.atomic():
+        cafe.delete_instance()
+
+    return Response(status=204)
