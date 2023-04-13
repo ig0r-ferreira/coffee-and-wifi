@@ -4,33 +4,31 @@ from typing import Any, Generator
 import pytest
 from flask import Flask
 from flask.testing import FlaskClient
-from pydantic import HttpUrl, parse_obj_as
 
 from coffee_and_wifi import create_app
-from coffee_and_wifi.extensions.database import get_database
-from coffee_and_wifi.models import Cafe
+from coffee_and_wifi.extensions.database import Cafe, db_wrapper
 
 
-def cafes() -> list[dict[str, Any]]:
+def cafes() -> list[dict[str, str | int]]:
     return [
-        Cafe(
-            name='Cafe 1',
-            location=parse_obj_as(HttpUrl, 'https://cafe-1.com'),
-            opening_time='07:00',
-            closing_time='10:00',
-            coffee_rating=5,
-            wifi_rating=5,
-            power_rating=5,
-        ).dict(),
-        Cafe(
-            name='Cafe 2',
-            location=parse_obj_as(HttpUrl, 'https://cafe-2.com'),
-            opening_time='18:00',
-            closing_time='22:00',
-            coffee_rating=4,
-            wifi_rating=3,
-            power_rating=2,
-        ).dict(),
+        {
+            'name': 'Cafe 1',
+            'location': 'https://cafe-1.com',
+            'opening_time': '07:00',
+            'closing_time': '10:00',
+            'coffee_rating': 5,
+            'wifi_rating': 5,
+            'power_rating': 5,
+        },
+        {
+            'name': 'Cafe 2',
+            'location': 'https://cafe-2.com',
+            'opening_time': '18:00',
+            'closing_time': '22:00',
+            'coffee_rating': 4,
+            'wifi_rating': 3,
+            'power_rating': 2,
+        },
     ]
 
 
@@ -40,15 +38,15 @@ def app() -> Generator[Flask, Any, Any]:
 
     app = create_app()
 
-    with app.app_context():
-        get_database().insert_multiple(cafes())
+    with db_wrapper.database:
+        Cafe.insert_many(cafes()).execute()
 
     yield app
 
-    os.environ['ENV'] = 'development'
+    with db_wrapper.database:
+        Cafe.drop_table(safe=True)
 
-    with app.app_context():
-        get_database().truncate()
+    os.environ['ENV'] = 'development'
 
 
 @pytest.fixture

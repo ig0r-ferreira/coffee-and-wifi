@@ -18,12 +18,12 @@ class DefaultConfig(BaseSettings):
 
 class DevConfig(DefaultConfig):
     ENV: Literal['development']
-    DATABASE_PATH: str = 'data/cafes.json'
+    DATABASE: str = 'sqlite:///instance/cafes.db'
 
 
 class TestConfig(DefaultConfig):
     ENV: Literal['testing']
-    DATABASE_PATH: str = 'data/test.json'
+    DATABASE: str = 'sqlite:///instance/test.db'
     TESTING: bool = True
 
 

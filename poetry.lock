@@ -443,6 +443,17 @@ files = [
 ]
 
 [[package]]
+name = "peewee"
+version = "3.16.0"
+description = "a little orm"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "peewee-3.16.0.tar.gz", hash = "sha256:1800c0a04962ee99d161c07f5a12fc49549caf5cfcda426a9103e34e37f854ba"},
+]
+
+[[package]]
 name = "platformdirs"
 version = "3.2.0"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
@@ -588,18 +599,6 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
-name = "tinydb"
-version = "4.7.1"
-description = "TinyDB is a tiny, document oriented database optimized for your happiness :)"
-category = "main"
-optional = false
-python-versions = ">=3.7,<4.0"
-files = [
-    {file = "tinydb-4.7.1-py3-none-any.whl", hash = "sha256:1534e498ca23f55c43b0f1e7c0cf174049498ab45a887c82ba9831e0f9868df3"},
-    {file = "tinydb-4.7.1.tar.gz", hash = "sha256:8955c239a79b8a6c8f637900152e2de38690848199d71d870c33c16405433ca5"},
-]
-
-[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -662,4 +661,4 @@ email = ["email-validator"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e5f57546554d2968d0b7820d0393bcdd29f4751b21cdb37454782400104f7b46"
+content-hash = "061c2ff4c8385a5a52fb867d23de7f9cab0b77c0a49227aa0aa0aee17a827540"

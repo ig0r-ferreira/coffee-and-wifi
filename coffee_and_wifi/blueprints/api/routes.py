@@ -1,12 +1,10 @@
 import random
-import re
 
-import pydantic
+import peewee
 from flask import Blueprint, Response, jsonify, request
 from flask.typing import ResponseReturnValue
 
-from coffee_and_wifi.extensions.database import Query, get_database
-from coffee_and_wifi.models import Cafe
+from coffee_and_wifi.extensions.database import Cafe, db_wrapper
 
 api = Blueprint('api', __name__, url_prefix='/api/v1')
 
@@ -14,32 +12,37 @@ api = Blueprint('api', __name__, url_prefix='/api/v1')
 @api.get('/cafes/random')
 def get_random_cafe() -> ResponseReturnValue:
     cafe = None
-    cafes = get_database().all()
+    with db_wrapper.database:
+        cafes = list(Cafe.select().dicts())
+
     if cafes:
         cafe = random.choice(cafes)
+
     return jsonify({'cafe': cafe})
 
 
 @api.get('/cafes')
 def get_all_cafes() -> ResponseReturnValue:
-    return jsonify({'cafes': get_database().all()})
+    with db_wrapper.database:
+        cafes = list(Cafe.select().dicts())
+
+    return jsonify({'cafes': cafes})
 
 
 @api.post('/cafes')
 def add_cafe() -> ResponseReturnValue:
     payload = request.json or {}
+    payload.pop('id', None)
 
     try:
-        cafe = Cafe(**payload)
-    except pydantic.ValidationError as exception:
-        return jsonify(errors=exception.errors()), 400
+        with db_wrapper.database.atomic():
+            Cafe.create(**payload)
+    except peewee.IntegrityError as exception:
+        response, status_code = jsonify(errors=[str(exception)]), 400
 
-    database = get_database()
-    if database.search(Query().name.matches(cafe.name, flags=re.IGNORECASE)):
-        return (
-            jsonify(errors=[f'There is already a cafe named {cafe.name!a}.']),
-            409,
-        )
+        if 'UNIQUE' in exception.args[0]:
+            status_code = 409
 
-    database.insert(cafe.dict())
+        return response, status_code
+
     return Response(status=201)

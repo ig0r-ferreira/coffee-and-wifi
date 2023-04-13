@@ -1,19 +1,22 @@
-from flask import Flask, current_app, g
-from tinydb import *
+import peewee
+from flask import Flask
+from playhouse.flask_utils import FlaskDB
+
+db_wrapper = FlaskDB()
 
 
-def get_database() -> TinyDB:
-    if not hasattr(g, '_database'):
-        g._database = TinyDB(current_app.config['DATABASE_PATH'], indent=4)
-
-    return g._database
-
-
-def close_database() -> None:
-    if hasattr(g, '_database'):
-        database: TinyDB = g._database
-        database.close()
+class Cafe(db_wrapper.Model):   # type: ignore[name-defined]
+    name = peewee.TextField(unique=True)
+    location = peewee.TextField()
+    opening_time = peewee.TextField()
+    closing_time = peewee.TextField()
+    coffee_rating = peewee.IntegerField()
+    wifi_rating = peewee.IntegerField()
+    power_rating = peewee.IntegerField()
 
 
 def init_app(app: Flask) -> None:
-    app.teardown_appcontext(lambda exception: close_database())
+    db_wrapper.init_app(app)
+
+    with db_wrapper.database:
+        db_wrapper.database.create_tables([Cafe], safe=True)
