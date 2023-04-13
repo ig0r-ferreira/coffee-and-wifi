@@ -107,3 +107,23 @@ def test_create_new_cafe_passing_an_id_should_disregard_and_return_a_different_i
 
     assert response.status_code == 201
     assert cafe_data['id'] != stored_cafe.id
+
+
+def test_get_cafe_with_id_1_should_return_the_name_of_the_first_cafe(
+    client: FlaskClient,
+) -> None:
+    response = client.get(f'/api/v1/cafes/1')
+    data = response.json or {}
+
+    assert response.status_code == 200
+    assert data['cafe']['name'] == 'Cafe 1'
+
+
+def test_get_cafe_should_return_404_when_not_found(
+    client: FlaskClient,
+) -> None:
+    response = client.get(f'/api/v1/cafes/3')
+    result = response.json or {}
+
+    assert response.status_code == 404
+    assert result['errors'][0] == 'Cafe not found.'

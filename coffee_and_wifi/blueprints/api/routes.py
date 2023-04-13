@@ -3,6 +3,7 @@ import random
 import peewee
 from flask import Blueprint, Response, jsonify, request
 from flask.typing import ResponseReturnValue
+from playhouse.shortcuts import model_to_dict
 
 from coffee_and_wifi.extensions.database import Cafe, db_wrapper
 
@@ -46,3 +47,14 @@ def add_cafe() -> ResponseReturnValue:
         return response, status_code
 
     return Response(status=201)
+
+
+@api.get('/cafes/<id>')
+def get_cafe(id: str) -> ResponseReturnValue:
+    with db_wrapper.database:
+        cafe = Cafe.get_or_none(int(id))
+
+    if cafe is None:
+        return jsonify(errors=['Cafe not found.']), 404
+
+    return jsonify(cafe=model_to_dict(cafe))
