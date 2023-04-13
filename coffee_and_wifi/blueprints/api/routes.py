@@ -58,3 +58,30 @@ def get_cafe(id: str) -> ResponseReturnValue:
         return jsonify(errors=['Cafe not found.']), 404
 
     return jsonify(cafe=model_to_dict(cafe))
+
+
+@api.patch('/cafes/<id>')
+def update_cafe(id: str) -> ResponseReturnValue:
+    with db_wrapper.database:
+        cafe = Cafe.get_or_none(int(id))
+
+    if cafe is None:
+        return jsonify(errors=['Cafe not found.']), 404
+
+    if not request.json:
+        return (
+            jsonify(errors=['Could not update cafe as no data was provided.']),
+            400,
+        )
+
+    if 'id' in request.json:
+        return (
+            jsonify(errors=['The cafe id cannot be changed.']),
+            403,
+        )
+
+    for key, value in request.json.items():
+        setattr(cafe, key, value)
+
+    cafe.save()
+    return Response(status=204)
