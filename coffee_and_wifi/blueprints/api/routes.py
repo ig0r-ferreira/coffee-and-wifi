@@ -13,8 +13,7 @@ api = Blueprint('api', __name__, url_prefix='/api/v1')
 @api.get('/cafes/random')
 def get_random_cafe() -> ResponseReturnValue:
     cafe = None
-    with db_wrapper.database:
-        cafes = list(Cafe.select().dicts())
+    cafes = list(Cafe.select().dicts())
 
     if cafes:
         cafe = random.choice(cafes)
@@ -24,8 +23,7 @@ def get_random_cafe() -> ResponseReturnValue:
 
 @api.get('/cafes')
 def get_all_cafes() -> ResponseReturnValue:
-    with db_wrapper.database:
-        cafes = list(Cafe.select().dicts())
+    cafes = list(Cafe.select().dicts())
 
     return jsonify({'cafes': cafes})
 
@@ -51,8 +49,7 @@ def add_cafe() -> ResponseReturnValue:
 
 @api.get('/cafes/<id>')
 def get_cafe(id: str) -> ResponseReturnValue:
-    with db_wrapper.database:
-        cafe = Cafe.get_or_none(int(id))
+    cafe = Cafe.get_or_none(int(id))
 
     if cafe is None:
         return jsonify(errors=['Cafe not found.']), 404
@@ -62,8 +59,7 @@ def get_cafe(id: str) -> ResponseReturnValue:
 
 @api.patch('/cafes/<id>')
 def update_cafe(id: str) -> ResponseReturnValue:
-    with db_wrapper.database:
-        cafe = Cafe.get_or_none(int(id))
+    cafe = Cafe.get_or_none(int(id))
 
     if cafe is None:
         return jsonify(errors=['Cafe not found.']), 404
@@ -83,19 +79,20 @@ def update_cafe(id: str) -> ResponseReturnValue:
     for key, value in request.json.items():
         setattr(cafe, key, value)
 
-    cafe.save()
+    try:
+        cafe.save()
+    except peewee.IntegrityError as exception:
+        return jsonify(errors=[str(exception)]), 409
+
     return Response(status=204)
 
 
 @api.delete('/cafes/<id>')
 def delete_cafe(id: str) -> ResponseReturnValue:
-    with db_wrapper.database:
-        cafe = Cafe.get_or_none(int(id))
+    cafe = Cafe.get_or_none(int(id))
 
     if cafe is None:
         return jsonify(errors=['Cafe not found.']), 404
 
-    with db_wrapper.database.atomic():
-        cafe.delete_instance()
-
+    cafe.delete_instance()
     return Response(status=204)
