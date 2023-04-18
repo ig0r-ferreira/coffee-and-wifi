@@ -11,6 +11,7 @@ load_dotenv()
 class DefaultConfig(BaseSettings):
     SECRET_KEY: str
     TESTING: bool = False
+    RESTX_ERROR_404_HELP: bool = False
 
     class Config:
         env_prefix = 'FLASK_'

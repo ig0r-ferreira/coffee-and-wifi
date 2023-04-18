@@ -6,7 +6,8 @@ from flask import Flask
 from flask.testing import FlaskClient
 
 from coffee_and_wifi import create_app
-from coffee_and_wifi.extensions.database import Cafe, db_wrapper
+from coffee_and_wifi.extensions.database import db_wrapper
+from coffee_and_wifi.extensions.database.models import Cafe
 
 
 def cafes() -> list[dict[str, str | int]]:

@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from werkzeug import Response
 
-from coffee_and_wifi.extensions.database import Cafe
+from coffee_and_wifi.extensions.database.models import Cafe
 from coffee_and_wifi.forms import CafeForm
 
 ui = Blueprint('ui', __name__)

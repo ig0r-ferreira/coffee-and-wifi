@@ -1,7 +1,7 @@
 from flask import Flask
 
-from .routes import api
+from .resources import blueprint
 
 
 def init_app(app: Flask) -> None:
-    app.register_blueprint(api)
+    app.register_blueprint(blueprint)
