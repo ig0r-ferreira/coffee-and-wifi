@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 import peewee
 from flask import Blueprint
-from flask_restx import Api, Namespace, Resource, fields
+from flask_restx import Api, Resource, fields
 
 from coffee_and_wifi.extensions.database import db_wrapper
 from coffee_and_wifi.extensions.database.models import Cafe

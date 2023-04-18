@@ -30,6 +30,15 @@ def cafes() -> list[dict[str, str | int]]:
             'wifi_rating': 3,
             'power_rating': 2,
         },
+        {
+            'name': 'Cafe 3',
+            'location': 'https://cafe-3.com',
+            'opening_time': '18:00',
+            'closing_time': '22:00',
+            'coffee_rating': 3,
+            'wifi_rating': 0,
+            'power_rating': 5,
+        },
     ]
 
 

@@ -15,5 +15,13 @@ class Cafe(db_wrapper.Model):
     wifi_rating = peewee.IntegerField()
     power_rating = peewee.IntegerField()
 
+    class Meta:
+        constraints = [
+            peewee.Check('location LIKE "https://%"'),
+            peewee.Check('coffee_rating >= 0 AND coffee_rating <= 5'),
+            peewee.Check('wifi_rating >= 0 AND wifi_rating <= 5'),
+            peewee.Check('power_rating >= 0 AND power_rating <= 5'),
+        ]
+
     def as_dict(self) -> dict[str, Any]:
         return model_to_dict(self)

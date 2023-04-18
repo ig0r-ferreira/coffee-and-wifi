@@ -1,3 +1,6 @@
+from typing import Any
+
+import pytest
 from flask.testing import FlaskClient
 
 from coffee_and_wifi.extensions.database import db_wrapper
@@ -15,7 +18,7 @@ def test_get_random_coffee_should_return_cafe_when_the_database_has_any_records(
     assert response.json.keys() == Cafe._meta.fields.keys()
 
 
-def test_get_random_coffee_should_return_http_code_404_when_database_is_empty(
+def test_get_random_coffee_should_return_error_404_when_database_is_empty(
     client: FlaskClient,
 ) -> None:
     with db_wrapper.database:
@@ -43,8 +46,8 @@ def test_create_new_cafe_should_return_http_code_201(
     client: FlaskClient,
 ) -> None:
     cafe_data = {
-        'name': 'Cafe 3',
-        'location': 'https://cafe-3.com',
+        'name': 'New Cafe',
+        'location': 'https://newcafe.com',
         'opening_time': '07:00',
         'closing_time': '22:00',
         'coffee_rating': 5,
@@ -58,7 +61,27 @@ def test_create_new_cafe_should_return_http_code_201(
     assert cafe_data.items() <= response_content.items()
 
 
-def test_create_new_cafe_should_return_http_code_400_for_missing_data(
+def test_create_new_cafe_should_return_error_400_for_invalid_location(
+    client: FlaskClient,
+) -> None:
+    cafe_data = {
+        'name': 'New Cafe',
+        'location': 'none',
+        'opening_time': '07:00',
+        'closing_time': '22:00',
+        'coffee_rating': 5,
+        'wifi_rating': 5,
+        'power_rating': 5,
+    }
+    response = client.post('/api/v1/cafes/', json=cafe_data)
+
+    assert response.status_code == 400
+    assert response.json == {
+        'message': 'CHECK constraint failed: location LIKE "https://%"'
+    }
+
+
+def test_create_new_cafe_should_return_error_400_for_missing_data(
     client: FlaskClient,
 ) -> None:
     cafe_data = {'name': 'Cafe 3'}
@@ -70,7 +93,7 @@ def test_create_new_cafe_should_return_http_code_400_for_missing_data(
     assert response_content['message'] == 'Input payload validation failed'
 
 
-def test_create_new_cafe_should_return_http_code_409_when_cafe_already_exists(
+def test_create_new_cafe_should_return_error_409_when_cafe_already_exists(
     client: FlaskClient,
 ) -> None:
 
@@ -120,7 +143,7 @@ def test_get_cafe_with_id_1_should_return_the_name_of_the_first_cafe(
 def test_get_cafe_should_return_error_404_when_not_found(
     client: FlaskClient,
 ) -> None:
-    response = client.get(f'/api/v1/cafes/3')
+    response = client.get(f'/api/v1/cafes/4')
 
     assert response.status_code == 404
     assert response.json == {'message': 'Cafe not found.'}
@@ -144,7 +167,7 @@ def test_update_cafe_should_return_http_code_204_and_updated_data(
         assert cafe_data[key] == response_content[key]
 
 
-def test_update_non_existent_cafe_should_return_http_code_404(
+def test_update_non_existent_cafe_should_return_error_404(
     client: FlaskClient,
 ) -> None:
     id = 10
@@ -179,7 +202,67 @@ def test_update_cafe_when_an_id_is_provided_should_not_change_the_id(
     assert response.json == {'message': 'The cafe id cannot be changed.'}
 
 
-def test_update_cafe_name_to_one_that_already_exists(
+@pytest.mark.parametrize(
+    'id, cafe_data, expected_error',
+    [
+        (
+            1,
+            {
+                'coffee_rating': 6,
+            },
+            'CHECK constraint failed: coffee_rating >= 0 AND coffee_rating <= 5',
+        ),
+        (
+            2,
+            {
+                'wifi_rating': 6,
+            },
+            'CHECK constraint failed: wifi_rating >= 0 AND wifi_rating <= 5',
+        ),
+        (
+            3,
+            {
+                'power_rating': 6,
+            },
+            'CHECK constraint failed: power_rating >= 0 AND power_rating <= 5',
+        ),
+        (
+            1,
+            {
+                'coffee_rating': -1,
+            },
+            'CHECK constraint failed: coffee_rating >= 0 AND coffee_rating <= 5',
+        ),
+        (
+            2,
+            {
+                'wifi_rating': -1,
+            },
+            'CHECK constraint failed: wifi_rating >= 0 AND wifi_rating <= 5',
+        ),
+        (
+            3,
+            {
+                'power_rating': -1,
+            },
+            'CHECK constraint failed: power_rating >= 0 AND power_rating <= 5',
+        ),
+    ],
+)
+def test_update_cafe_should_return_error_400_for_a_rating_field_out_of_range(
+    client: FlaskClient,
+    id: int,
+    cafe_data: dict[str, Any],
+    expected_error: str,
+) -> None:
+    response = client.patch(f'/api/v1/cafes/{id}', json=cafe_data)
+    response_content = response.json or {}
+
+    assert response.status_code == 400
+    assert response_content['message'] == expected_error
+
+
+def test_update_cafe_should_return_error_409_when_a_cafe_with_the_given_name_already_exists(
     client: FlaskClient,
 ) -> None:
     id = 1
