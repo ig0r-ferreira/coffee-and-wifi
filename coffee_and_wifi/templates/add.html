@@ -3,9 +3,22 @@
 {% block title %}Add a New Cafe{% endblock title %} 
 {% block content %}
     <div class="container">
-        <h1>Add a new cafe into the database</h1>
+        <h1>Add a new cafe</h1>
+        {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {% if errors %}
+            <ul class="error-list list-group">
+            {% for error in errors %}
+                <li class="list-group-item list-group-item-danger">
+                    <strong>Error: {{ error }}</strong>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
         <form action="{{ url_for('ui.add_cafe') }}" method="post" novalidate>
-            {{ form.csrf_token() }}
+            {% if 'csrf_token' in form %}
+                {{ form.csrf_token }}
+            {% endif %}
             {{ render_form_row([form.cafe_name, form.cafe_location]) }}
             {{ 
                 render_form_row(

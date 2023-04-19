@@ -26,6 +26,7 @@ class TestConfig(DefaultConfig):
     ENV: Literal['testing']
     DATABASE: str = 'sqlite:///instance/test.db'
     TESTING: bool = True
+    WTF_CSRF_ENABLED: bool = False
 
 
 class AppConfig(BaseModel):
