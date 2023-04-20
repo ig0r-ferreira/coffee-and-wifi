@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Any
 
 import pytest
@@ -13,7 +14,7 @@ def test_get_random_coffee_should_return_cafe_when_the_database_has_any_records(
     response = client.get('/api/v1/cafes/random')
 
     assert Cafe.select().count() > 0
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert type(response.json) == dict
     assert response.json.keys() == Cafe._meta.fields.keys()
 
@@ -26,7 +27,7 @@ def test_get_random_coffee_should_return_error_404_when_database_is_empty(
 
     response = client.get('/api/v1/cafes/random')
 
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json == {'message': 'Cafe not found.'}
 
 
@@ -38,6 +39,7 @@ def test_get_all_cafes_should_return_all_registered_cafes(
 
     all_cafes = list(Cafe.select().dicts())
 
+    assert response.status_code == HTTPStatus.OK
     assert response_content['count'] == len(all_cafes)
     assert response_content['cafes'] == all_cafes
 
@@ -57,7 +59,7 @@ def test_create_new_cafe_should_return_http_code_201(
     response = client.post('/api/v1/cafes/', json=cafe_data)
     response_content = response.json or {}
 
-    assert response.status_code == 201
+    assert response.status_code == HTTPStatus.CREATED
     assert cafe_data.items() <= response_content.items()
 
 
@@ -75,7 +77,7 @@ def test_create_new_cafe_should_return_error_400_for_invalid_location(
     }
     response = client.post('/api/v1/cafes/', json=cafe_data)
 
-    assert response.status_code == 400
+    assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.json == {
         'message': 'CHECK constraint failed: location LIKE "https://%"'
     }
@@ -88,7 +90,7 @@ def test_create_new_cafe_should_return_error_400_for_missing_data(
     response = client.post('/api/v1/cafes/', json=cafe_data)
     response_content = response.json or {}
 
-    assert response.status_code == 400
+    assert response.status_code == HTTPStatus.BAD_REQUEST
     assert 'errors' in response_content
     assert response_content['message'] == 'Input payload validation failed'
 
@@ -104,7 +106,7 @@ def test_create_new_cafe_should_return_error_409_when_cafe_already_exists(
 
     response = client.post('/api/v1/cafes/', json=stored_cafe)
 
-    assert response.status_code == 409
+    assert response.status_code == HTTPStatus.CONFLICT
     assert response.json == {
         'message': 'Cafe with the given name already exists.'
     }
@@ -126,7 +128,7 @@ def test_create_new_cafe_passing_an_id_should_store_with_a_different_id(
     response = client.post('/api/v1/cafes/', json=cafe_data)
     stored_cafe = response.json or {}
 
-    assert response.status_code == 201
+    assert response.status_code == HTTPStatus.CREATED
     assert cafe_data['id'] != stored_cafe['id']
 
 
@@ -136,7 +138,7 @@ def test_get_cafe_with_id_1_should_return_the_name_of_the_first_cafe(
     response = client.get(f'/api/v1/cafes/1')
     response_content = response.json or {}
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response_content['name'] == 'Cafe 1'
 
 
@@ -145,7 +147,7 @@ def test_get_cafe_should_return_error_404_when_not_found(
 ) -> None:
     response = client.get(f'/api/v1/cafes/4')
 
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json == {'message': 'Cafe not found.'}
 
 
@@ -162,7 +164,7 @@ def test_update_cafe_should_return_http_code_204_and_updated_data(
     response = client.patch(f'/api/v1/cafes/{id}', json=cafe_data)
     response_content = response.json or {}
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     for key in cafe_data:
         assert cafe_data[key] == response_content[key]
 
@@ -186,7 +188,7 @@ def test_update_cafe_should_return_error_400_when_an_empty_json_is_provided(
     id = 1
     response = client.patch(f'/api/v1/cafes/{id}', json={})
 
-    assert response.status_code == 400
+    assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.json == {
         'message': 'Could not update cafe as no data was provided.'
     }
@@ -198,7 +200,7 @@ def test_update_cafe_when_an_id_is_provided_should_not_change_the_id(
     id = 1
     response = client.patch(f'/api/v1/cafes/{id}', json={'id': 1000})
 
-    assert response.status_code == 403
+    assert response.status_code == HTTPStatus.FORBIDDEN
     assert response.json == {'message': 'The cafe id cannot be changed.'}
 
 
@@ -258,7 +260,7 @@ def test_update_cafe_should_return_error_400_for_a_rating_field_out_of_range(
     response = client.patch(f'/api/v1/cafes/{id}', json=cafe_data)
     response_content = response.json or {}
 
-    assert response.status_code == 400
+    assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response_content['message'] == expected_error
 
 
@@ -268,7 +270,7 @@ def test_update_cafe_should_return_error_409_when_a_cafe_with_the_given_name_alr
     id = 1
     response = client.patch(f'/api/v1/cafes/{id}', json={'name': 'Cafe 2'})
 
-    assert response.status_code == 409
+    assert response.status_code == HTTPStatus.CONFLICT
     assert response.json == {
         'message': 'Cafe with the given name already exists.'
     }
@@ -280,7 +282,7 @@ def test_delete_an_existing_cafe_should_return_code_200(
     id = 2
     response = client.delete(f'/api/v1/cafes/{id}')
 
-    assert response.status_code == 204
+    assert response.status_code == HTTPStatus.NO_CONTENT
     assert Cafe.get_or_none(id) is None
 
 
@@ -290,5 +292,5 @@ def test_delete_cafe_with_a_non_existing_id_should_return_error_404(
     id = 5
     response = client.delete(f'/api/v1/cafes/{id}')
 
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json == {'message': 'Cafe not found.'}
