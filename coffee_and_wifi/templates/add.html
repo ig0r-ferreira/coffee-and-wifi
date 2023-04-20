@@ -1,9 +1,26 @@
 {% extends 'base.html' %}
 {% from 'bootstrap5/form.html' import render_form_row %}
-{% block title %}Add a New Cafe{% endblock title %} 
+{% block title %}Add a New Cafe{% endblock title %}
+{% block styles %}
+    {{ super() }}
+    {{ render_static('css', 'css/add-cafe.css') }}
+{% endblock styles %}
 {% block content %}
-    <div class="container">
-        <h1>Add a new cafe</h1>
+<div class="container">
+    <header>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{{ url_for('ui.index') }}" class="nav-link" aria-current="page">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('ui.cafes') }}" class="nav-link">Cafes</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('ui.add_cafe') }}" class="nav-link active">New Cafe</a>
+            </li>
+        </ul>
+    </header>
+    <main>
         {% with errors = get_flashed_messages(category_filter=["error"]) %}
         {% if errors %}
             <ul class="error-list list-group">
@@ -19,24 +36,33 @@
             {% if 'csrf_token' in form %}
                 {{ form.csrf_token }}
             {% endif %}
-            {{ render_form_row([form.cafe_name, form.cafe_location]) }}
+            {{ 
+                render_form_row([form.cafe_name]) 
+            }}
+            {{ 
+                render_form_row([form.cafe_location]) 
+            }}
             {{ 
                 render_form_row(
-                    [
-                        form.opening_time, form.closing_time, form.coffee_rating, 
-                        form.wifi_rating, form.power_rating
-                    ], 
+                    [form.opening_time, form.closing_time], 
                     col_map={
-                        'opening_time': 'col-lg-3', 
-                        'closing_time': 'col-lg-3',
-                        'coffee_rating': 'col-lg-2',
-                        'wifi_rating': 'col-lg-2',
-                        'power_rating': 'col-lg-2'
-                    },
+                        'opening_time': 'col-md-6', 
+                        'closing_time': 'col-md-6'
+                    }
+                ) 
+            }}
+            {{ 
+                render_form_row(
+                    [form.coffee_rating, form.wifi_rating, form.power_rating],
+                    col_map={
+                        'coffee_rating': 'col-xl-4',
+                        'wifi_rating': 'col-xl-4',
+                        'power_rating': 'col-xl-4'
+                    }
                 ) 
             }}
             {{ render_form_row([form.submit]) }} 
         </form>
-        <p class="space-above"><a href="{{ url_for('ui.cafes') }}">See all cafes</a></p>    
-    </div>
+    </main>
+</div>
 {% endblock content %}

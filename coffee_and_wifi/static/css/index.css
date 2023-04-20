@@ -1,0 +1,13 @@
+main {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 2.5rem;
+}
+
+@media screen and (min-width: 992px) {
+    main {
+        width: 56%;
+    }
+}

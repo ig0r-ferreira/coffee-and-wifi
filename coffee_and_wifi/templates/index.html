@@ -1,16 +1,32 @@
 {% extends 'base.html' %} 
-{% block title %}Coffee and Wifi{% endblock title %} 
+{% block title %}Coffee and Wi-fi{% endblock title %} 
+{% block styles %}
+    {{ super() }}
+    {{ render_static('css', 'css/index.css') }}
+{% endblock styles %}
 {% block content %}
-<div class="jumbotron text-center">
-    <div class="container">
-        <h1 class="display-4">☕️ Coffee & Wifi 💻</h1>
-        <p class="lead">Want to work in a cafe but need power and wifi?</p>
+<div class="container">
+    <header>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{{ url_for('ui.index') }}" class="nav-link active" aria-current="page">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('ui.cafes') }}" class="nav-link">Cafes</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('ui.add_cafe') }}" class="nav-link">New Cafe</a>
+            </li>
+        </ul>
+    </header>
+    <main>
+        <h1 class="display-4">☕️ Coffee & Wi-fi 💻</h1>
+        <p class="lead">Want to work in a cafe but need power and wi-fi?</p>
         <hr class="my-4" />
         <p>
             You've found the right place! Checkout my collection of cafes with
             data on power socket availability, wifi speed and coffee quality.
         </p>
-        <a class="btn btn-warning btn-lg" href="{{ url_for('ui.cafes') }}" role="button">Show Me!</a>
-    </div>
+    </main>
 </div>
 {% endblock content %}

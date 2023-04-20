@@ -10,7 +10,7 @@ def generate_rating(symbol: str) -> list[tuple[int, str]]:
 class AddCafeForm(FlaskForm):
     cafe_name = StringField('Cafe Name', validators=[InputRequired()])
     cafe_location = URLField(
-        'Cafe Location on Google Maps (URL)',
+        'Location on Google Maps (URL)',
         validators=[InputRequired(), URL()],
     )
     opening_time = TimeField('Opening Time', validators=[InputRequired()])
@@ -22,4 +22,4 @@ class AddCafeForm(FlaskForm):
     power_rating = SelectField(
         'Power Socket Available', choices=generate_rating('🔌')
     )
-    submit = SubmitField('Submit')
+    submit = SubmitField('Add')

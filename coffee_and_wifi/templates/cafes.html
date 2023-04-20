@@ -1,35 +1,50 @@
 {% extends 'base.html' %} 
-{% block title %}Coffee Shops{% endblock title %}
+{% block title %}Cafes{% endblock title %}
+{% block styles %}
+    {{ super() }}
+    {{ render_static('css', 'css/cafes.css') }}
+{% endblock styles %}
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <h1>All Cafes</h1>
-
-                <table class="table">
-                    <tr>
-                        <th>Cafe Name</th>
-                        <th>Cafe Location</th>
-                        <th>Opening Time</th>
-                        <th>Closing Time</th>
-                        <th>Coffee Rating</th>
-                        <th>Wi-fi Rating</th>
-                        <th>Power Rating</th>
-                    </tr>
-                    {% for cafe in cafes %}
-                        <tr>
-                            <td>{{ cafe['name'] }}</td>
-                            <td><a href="{{ cafe['location'] }}">Click Here</a></td>
-                            <td>{{ cafe['opening_time'] }}</td>
-                            <td>{{ cafe['closing_time'] }}</td>
-                            <td>{{ (cafe['coffee_rating'] * '☕️') or '❌'}}</td>
-                            <td>{{ (cafe['wifi_rating'] * '💪') or '❌'}}</td>
-                            <td>{{ (cafe['power_rating'] * '🔌') or '❌'}}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                <p><a href="{{ url_for('ui.index') }}">Return to home page</a></p>
+<div class="container">
+    <header>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{{ url_for('ui.index') }}" class="nav-link" aria-current="page">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('ui.cafes') }}" class="nav-link active">Cafes</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('ui.add_cafe') }}" class="nav-link">New Cafe</a>
+            </li>
+        </ul>
+    </header>
+    <main>
+        {% for cafe in cafes %}
+        <div class="card text-bg-dark">
+            <div class="card-header text-bg-light">
+                <h2>{{ cafe['name'] }}</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text">🕒 {{ cafe['opening_time'] }} - {{ cafe['closing_time'] }}</p>
+            </div>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item">Coffee Rating</li>
+                <li class="list-group-item">{{ (cafe['coffee_rating'] * '☕️') or '❌'}}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item">Wi-fi Rating</li>
+                <li class="list-group-item">{{ (cafe['wifi_rating'] * '💪') or '❌'}}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item">Power Rating</li>
+                <li class="list-group-item">{{ (cafe['power_rating'] * '🔌') or '❌'}}</li>
+            </ul>        
+            <div class="card-body">
+                <a class="card-link" href="{{ cafe['location'] }}">See location</a>
             </div>
         </div>
-    </div>
+        {% endfor %}
+    </main>
+</div>
 {% endblock content %}

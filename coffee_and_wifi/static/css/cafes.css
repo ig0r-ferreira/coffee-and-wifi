@@ -1,0 +1,32 @@
+h2 {
+    font-size: 1.3em;
+    margin-bottom: 0;
+}
+
+main {
+    text-align: center;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.card {
+    width: 20rem;
+    margin: 1.5em;
+}
+
+.card-header {
+    padding: 1em;
+}
+
+.card-link {
+    font-size: 1.05em;
+    color: gold;
+    text-decoration: none;
+}
+
+.list-group-item {
+    width: 50%;
+    color: white;
+    background-color: #212529;
+}

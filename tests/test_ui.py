@@ -10,9 +10,9 @@ def test_get_index(client: FlaskClient) -> None:
     response = client.get('/')
     response_content = response.get_data(as_text=True)
 
-    assert 'Coffee & Wifi' in response_content
+    assert 'Coffee & Wi-fi' in response_content
     assert (
-        'Want to work in a cafe but need power and wifi?' in response_content
+        'Want to work in a cafe but need power and wi-fi?' in response_content
     )
 
 
@@ -20,17 +20,14 @@ def test_get_all_cafes(client: FlaskClient) -> None:
     response = client.get('/cafes')
     response_content = response.get_data(as_text=True)
 
-    assert 'All Cafes' in response_content
-    assert 'Return to home page' in response_content
+    assert response.status_code == HTTPStatus.OK
+    assert 'Cafe 1' in response_content
+    assert 'Cafe 2' in response_content
 
 
-def test_get_add_cafe_form(client: FlaskClient) -> None:
+def test_get_add_cafe_page(client: FlaskClient) -> None:
     response = client.get('/add')
-    response_content = response.get_data(as_text=True)
-
-    assert 'Add a new cafe' in response_content
-    assert 'Submit' in response_content
-    assert 'See all cafes' in response_content
+    assert response.status_code == HTTPStatus.OK
 
 
 def test_add_cafe(client: FlaskClient) -> None:
