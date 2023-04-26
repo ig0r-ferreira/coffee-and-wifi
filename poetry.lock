@@ -738,6 +738,18 @@ files = [
 ]
 
 [[package]]
+name = "types-peewee"
+version = "3.16.0.0"
+description = "Typing stubs for peewee"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-peewee-3.16.0.0.tar.gz", hash = "sha256:2de43740f008e16a9c41c5f0237f89cf9aba2dfcdca6176dfb0eb2da2e7f6171"},
+    {file = "types_peewee-3.16.0.0-py3-none-any.whl", hash = "sha256:e08d633e96c55262f6e975bc893951dbb25bcf0c8382756b6a8d6c6b87a016e2"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.5.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -788,4 +800,4 @@ email = ["email-validator"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "dd77dc65c9217021b1cf6fa74ff32fd11b56b453ca864b6d7ac059226f2b7c66"
+content-hash = "f87d094b5d541f6a76eb64da3bd4c676597a9bc4d504f758536241b46e8e9fe7"
