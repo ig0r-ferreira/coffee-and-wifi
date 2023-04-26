@@ -23,6 +23,7 @@ mypy = "^1.1.1"
 pytest = "^7.3.0"
 coverage = "^7.2.3"
 types-peewee = "^3.16.0.0"
+taskipy = "^1.10.4"
 
 [build-system]
 requires = ["poetry-core"]
@@ -57,3 +58,14 @@ module = [
     "flask_restx"
 ]
 ignore_missing_imports = true
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.taskipy.tasks]
+lint = "isort --check --diff . && blue --check --diff ."
+format = "isort . && blue ."
+pre_test = "task lint"
+test = "coverage run --source=coffee_and_wifi -m pytest -s -x -v"
+post_test = "coverage html"
