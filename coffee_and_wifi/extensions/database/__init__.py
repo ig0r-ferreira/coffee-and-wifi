@@ -1,7 +1,10 @@
 from flask import Flask
+from peewee import IntegrityError
 from playhouse.flask_utils import FlaskDB
 
 db_wrapper = FlaskDB()
+
+__all__ = ['IntegrityError']
 
 
 def init_app(app: Flask) -> None:

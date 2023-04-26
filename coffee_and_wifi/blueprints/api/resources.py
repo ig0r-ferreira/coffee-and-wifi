@@ -1,11 +1,10 @@
 import random
 from http import HTTPStatus
 
-import peewee
 from flask import Blueprint
 from flask_restx import Api, Resource, fields
 
-from coffee_and_wifi.extensions.database import db_wrapper
+from coffee_and_wifi.extensions.database import IntegrityError, db_wrapper
 from coffee_and_wifi.extensions.database.models import Cafe
 
 from .exceptions import (
@@ -75,7 +74,7 @@ class List(Resource):
         try:
             with db_wrapper.database.atomic():
                 new_cafe = Cafe.create(**payload)
-        except peewee.IntegrityError as exception:
+        except IntegrityError as exception:
             error_msg = str(exception)
 
             if error_msg == 'UNIQUE constraint failed: cafe.name':
@@ -145,7 +144,7 @@ class Item(Resource):
 
         try:
             cafe.save()
-        except peewee.IntegrityError as exception:
+        except IntegrityError as exception:
             error_msg = str(exception)
 
             if error_msg == 'UNIQUE constraint failed: cafe.name':

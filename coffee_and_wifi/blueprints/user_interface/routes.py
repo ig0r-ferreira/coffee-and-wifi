@@ -1,8 +1,7 @@
-import peewee
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask.typing import ResponseReturnValue
 
-from coffee_and_wifi.extensions.database import db_wrapper
+from coffee_and_wifi.extensions.database import IntegrityError, db_wrapper
 from coffee_and_wifi.extensions.database.models import Cafe
 from coffee_and_wifi.extensions.forms import AddCafeForm
 
@@ -26,7 +25,7 @@ def add_cafe() -> ResponseReturnValue:
         try:
             with db_wrapper.database.atomic():
                 Cafe.create(**cafe_data)
-        except peewee.IntegrityError as exception:
+        except IntegrityError as exception:
             error_msg = str(exception)
 
             if error_msg == 'UNIQUE constraint failed: cafe.name':
