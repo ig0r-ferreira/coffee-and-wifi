@@ -4,7 +4,7 @@ from flask.typing import ResponseReturnValue
 
 from coffee_and_wifi.extensions.database import db_wrapper
 from coffee_and_wifi.extensions.database.models import Cafe
-from coffee_and_wifi.forms import AddCafeForm
+from coffee_and_wifi.extensions.forms import AddCafeForm
 
 ui = Blueprint('ui', __name__)
 
