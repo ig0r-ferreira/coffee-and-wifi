@@ -7,7 +7,7 @@ from . import db_wrapper
 
 
 class Cafe(db_wrapper.Model):
-    name = peewee.TextField(unique=True)
+    name = peewee.TextField()
     location = peewee.TextField()
     opening_time = peewee.TextField()
     closing_time = peewee.TextField()
@@ -17,6 +17,7 @@ class Cafe(db_wrapper.Model):
 
     class Meta:
         constraints = [
+            peewee.SQL('UNIQUE ("name" COLLATE NOCASE)'),
             peewee.Check('location LIKE "https://%"'),
             peewee.Check('coffee_rating >= 0 AND coffee_rating <= 5'),
             peewee.Check('wifi_rating >= 0 AND wifi_rating <= 5'),

@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import pytest
 from flask.testing import FlaskClient
 
 from coffee_and_wifi.extensions.database import db_wrapper
@@ -44,16 +45,20 @@ def test_add_cafe(client: FlaskClient) -> None:
     assert response.status_code == HTTPStatus.FOUND
 
 
+@pytest.mark.parametrize('cafe_name', ['CAFE 1', 'cAfE 1', 'cafe 1', 'Cafe 1'])
 def test_add_cafe_that_already_exists(
-    client: FlaskClient,
+    client: FlaskClient, cafe_name: str
 ) -> None:
 
-    with db_wrapper.database:
-        cafe_data = Cafe.get_by_id(2).as_dict()
-
-    del cafe_data['id']
-    cafe_data['cafe_name'] = cafe_data.pop('name')
-    cafe_data['cafe_location'] = cafe_data.pop('location')
+    cafe_data = {
+        'cafe_location': 'https://testcafe.com',
+        'opening_time': '08:00',
+        'closing_time': '22:00',
+        'coffee_rating': 4,
+        'wifi_rating': 4,
+        'power_rating': 4,
+    }
+    cafe_data['cafe_name'] = cafe_name
 
     response = client.post('/add', data=cafe_data)
 

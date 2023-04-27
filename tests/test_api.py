@@ -95,16 +95,22 @@ def test_create_new_cafe_should_return_error_400_for_missing_data(
     assert response_content['message'] == 'Input payload validation failed'
 
 
+@pytest.mark.parametrize('cafe_name', ['CAFE 1', 'cAfE 1', 'cafe 1', 'Cafe 1'])
 def test_create_new_cafe_should_return_error_409_when_cafe_already_exists(
-    client: FlaskClient,
+    client: FlaskClient, cafe_name: str
 ) -> None:
 
-    with db_wrapper.database:
-        stored_cafe = Cafe.get_by_id(2).as_dict()
+    cafe_data = {
+        'location': 'https://testcafe.com',
+        'opening_time': '08:00',
+        'closing_time': '22:00',
+        'coffee_rating': 4,
+        'wifi_rating': 4,
+        'power_rating': 4,
+    }
+    cafe_data['name'] = cafe_name
 
-    del stored_cafe['id']
-
-    response = client.post('/api/v1/cafes/', json=stored_cafe)
+    response = client.post('/api/v1/cafes/', json=cafe_data)
 
     assert response.status_code == HTTPStatus.CONFLICT
     assert response.json == {
