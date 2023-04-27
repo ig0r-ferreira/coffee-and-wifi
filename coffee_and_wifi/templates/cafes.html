@@ -1,40 +1,23 @@
 {% extends 'base.html' %} 
-{% block title %}Cafes{% endblock title %}
-{% block styles %}
-    {{ super() }}
-    {{ render_static('css', 'css/cafes.css') }}
-{% endblock styles %}
+{% block title %}Cafes - Coffee and Wi-fi{% endblock title %}
 {% block content %}
-<div class="container">
-    <header>
-        <ul class="nav nav-pills">
-            <li class="nav-item">
-                <a href="{{ url_for('ui.index') }}" class="nav-link" aria-current="page">Home</a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ url_for('ui.cafes') }}" class="nav-link active">Cafes</a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ url_for('ui.add_cafe') }}" class="nav-link">New Cafe</a>
-            </li>
-        </ul>
-    </header>
-    <main>
+<main>
+    <div class="d-flex flex-wrap justify-content-center">
         {% for cafe in cafes %}
-        <div class="card text-bg-dark">
+        <div class="card text-bg-dark text-center">
             <div class="card-header text-bg-light">
-                <h2>{{ cafe['name'] }}</h2>
+                <h2 class="mb-0">{{ cafe['name'] }}</h2>
             </div>
             <div class="card-body">
                 <p class="card-text">🕒 {{ cafe['opening_time'] }} - {{ cafe['closing_time'] }}</p>
             </div>
             <ul class="list-group list-group-horizontal">
-                <li class="list-group-item">Coffee Rating</li>
-                <li class="list-group-item">{{ (cafe['coffee_rating'] * '☕️') or '❌'}}</li>
+                <li class="list-group-item my-auto">Coffee Rating</li>
+                <li class="list-group-item my-auto">{{ (cafe['coffee_rating'] * '☕️') or '❌'}}</li>
             </ul>
             <ul class="list-group list-group-horizontal">
-                <li class="list-group-item">Wi-fi Rating</li>
-                <li class="list-group-item">{{ (cafe['wifi_rating'] * '💪') or '❌'}}</li>
+                <li class="list-group-item my-auto">Wi-fi Rating</li>
+                <li class="list-group-item my-auto">{{ (cafe['wifi_rating'] * '💪') or '❌'}}</li>
             </ul>
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item">Power Rating</li>
@@ -45,6 +28,6 @@
             </div>
         </div>
         {% endfor %}
-    </main>
-</div>
+    </div>
+</main>
 {% endblock content %}

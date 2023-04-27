@@ -8,18 +8,16 @@
         {% block styles %}
             <!-- Bootstrap CSS -->
             {{ bootstrap.load_css() }}
-            {{ render_static('css', 'css/global.css') }}
+            {{ render_static('css', 'css/custom.css') }}
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Kurale&display=swap" rel="stylesheet">
         {% endblock %}
     </head>
     <body>
-        <!-- Page content -->
-        {% block content %}{% endblock content %} 
-        {% block scripts %}
-            <!-- Optional JavaScript -->
-            {{ bootstrap.load_js() }} 
-        {% endblock scripts %}
+        <div class="container">
+            {% include 'header.html' %}
+            {% block content %}{% endblock content %}
+        </div>
     </body>
 </html>

@@ -1,0 +1,8 @@
+{% from 'bootstrap5/nav.html' import render_nav_item %}
+<header>
+    <ul class="nav nav-pills">
+        {{ render_nav_item('ui.index', 'Home', _use_li=True) }}
+        {{ render_nav_item('ui.cafes', 'Cafes', _use_li=True) }}
+        {{ render_nav_item('ui.add_cafe', 'New Cafe', _use_li=True) }}
+    </ul>
+</header>
