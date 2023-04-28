@@ -1,0 +1,16 @@
+[default]
+RESTX_ERROR_404_HELP = false
+EXTENSIONS = [
+  "coffee_and_wifi.blueprints.api:init_app",
+  "coffee_and_wifi.blueprints.user_interface:init_app",
+  "coffee_and_wifi.extensions.appearance:init_app",
+  "coffee_and_wifi.extensions.database:init_app",
+]
+
+[development]
+DATABASE = "sqlite:///instance/cafes.db"
+
+[testing]
+TESTING = true
+DATABASE = "sqlite:///instance/test.db"
+WTF_CSRF_ENABLED = false

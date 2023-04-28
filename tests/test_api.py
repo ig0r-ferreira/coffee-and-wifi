@@ -12,11 +12,14 @@ def test_get_random_coffee_should_return_cafe_when_the_database_has_any_records(
     client: FlaskClient,
 ) -> None:
     response = client.get('/api/v1/cafes/random')
+    result = response.json
 
-    assert Cafe.select().count() > 0
+    with db_wrapper.database:
+        assert Cafe.select().count() > 0
+
     assert response.status_code == HTTPStatus.OK
-    assert type(response.json) == dict
-    assert response.json.keys() == Cafe._meta.fields.keys()
+    assert type(result) == dict
+    assert result.keys() == Cafe._meta.fields.keys()
 
 
 def test_get_random_coffee_should_return_error_404_when_database_is_empty(
@@ -35,13 +38,14 @@ def test_get_all_cafes_should_return_all_registered_cafes(
     client: FlaskClient,
 ) -> None:
     response = client.get('/api/v1/cafes/')
-    response_content = response.json or {}
+    result = response.json or {}
 
-    all_cafes = list(Cafe.select().dicts())
+    with db_wrapper.database:
+        all_cafes = list(Cafe.select().dicts())
 
     assert response.status_code == HTTPStatus.OK
-    assert response_content['count'] == len(all_cafes)
-    assert response_content['cafes'] == all_cafes
+    assert result['count'] == len(all_cafes)
+    assert result['cafes'] == all_cafes
 
 
 def test_create_new_cafe_should_return_http_code_201(
@@ -57,10 +61,10 @@ def test_create_new_cafe_should_return_http_code_201(
         'power_rating': 5,
     }
     response = client.post('/api/v1/cafes/', json=cafe_data)
-    response_content = response.json or {}
+    result = response.json or {}
 
     assert response.status_code == HTTPStatus.CREATED
-    assert cafe_data.items() <= response_content.items()
+    assert cafe_data.items() <= result.items()
 
 
 def test_create_new_cafe_should_return_error_400_for_invalid_location(
@@ -88,11 +92,11 @@ def test_create_new_cafe_should_return_error_400_for_missing_data(
 ) -> None:
     cafe_data = {'name': 'Cafe 3'}
     response = client.post('/api/v1/cafes/', json=cafe_data)
-    response_content = response.json or {}
+    result = response.json or {}
 
     assert response.status_code == HTTPStatus.BAD_REQUEST
-    assert 'errors' in response_content
-    assert response_content['message'] == 'Input payload validation failed'
+    assert 'errors' in result
+    assert result['message'] == 'Input payload validation failed'
 
 
 @pytest.mark.parametrize('cafe_name', ['CAFE 1', 'cAfE 1', 'cafe 1', 'Cafe 1'])
@@ -142,10 +146,10 @@ def test_get_cafe_with_id_1_should_return_the_name_of_the_first_cafe(
     client: FlaskClient,
 ) -> None:
     response = client.get(f'/api/v1/cafes/1')
-    response_content = response.json or {}
+    result = response.json or {}
 
     assert response.status_code == HTTPStatus.OK
-    assert response_content['name'] == 'Cafe 1'
+    assert result['name'] == 'Cafe 1'
 
 
 def test_get_cafe_should_return_error_404_when_not_found(
@@ -168,11 +172,11 @@ def test_update_cafe_should_return_http_code_204_and_updated_data(
         'power_rating': 5,
     }
     response = client.patch(f'/api/v1/cafes/{id}', json=cafe_data)
-    response_content = response.json or {}
+    result = response.json or {}
 
     assert response.status_code == HTTPStatus.OK
     for key in cafe_data:
-        assert cafe_data[key] == response_content[key]
+        assert cafe_data[key] == result[key]
 
 
 def test_update_non_existent_cafe_should_return_error_404(
@@ -264,10 +268,10 @@ def test_update_cafe_should_return_error_400_for_a_rating_field_out_of_range(
     expected_error: str,
 ) -> None:
     response = client.patch(f'/api/v1/cafes/{id}', json=cafe_data)
-    response_content = response.json or {}
+    result = response.json or {}
 
     assert response.status_code == HTTPStatus.BAD_REQUEST
-    assert response_content['message'] == expected_error
+    assert result['message'] == expected_error
 
 
 def test_update_cafe_should_return_error_409_when_a_cafe_with_the_given_name_already_exists(
@@ -289,7 +293,8 @@ def test_delete_an_existing_cafe_should_return_code_200(
     response = client.delete(f'/api/v1/cafes/{id}')
 
     assert response.status_code == HTTPStatus.NO_CONTENT
-    assert Cafe.get_or_none(id) is None
+    with db_wrapper.database:
+        assert Cafe.get_or_none(id) is None
 
 
 def test_delete_cafe_with_a_non_existing_id_should_return_error_404(

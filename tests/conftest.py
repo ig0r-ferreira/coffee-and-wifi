@@ -1,4 +1,3 @@
-import os
 from typing import Any, Generator
 
 import pytest
@@ -44,9 +43,7 @@ def cafes() -> list[dict[str, str | int]]:
 
 @pytest.fixture
 def app() -> Generator[Flask, Any, Any]:
-    os.environ['ENV'] = 'testing'
-
-    app = create_app()
+    app = create_app(FORCE_ENV_FOR_DYNACONF='testing')
 
     with db_wrapper.database:
         Cafe.insert_many(cafes()).execute()
@@ -55,8 +52,6 @@ def app() -> Generator[Flask, Any, Any]:
 
     with db_wrapper.database:
         Cafe.drop_table(safe=True)
-
-    os.environ['ENV'] = 'development'
 
 
 @pytest.fixture

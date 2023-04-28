@@ -11,9 +11,9 @@ flask = "^2.2.2"
 flask-wtf = "^1.1.1"
 bootstrap-flask = "^2.2.0"
 python-dotenv = "^0.21.1"
-pydantic = "^1.10.7"
 peewee = "^3.16.0"
 flask-restx = "^1.1.0"
+dynaconf = "^3.1.12"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -55,7 +55,8 @@ module = [
     "flask_wtf",
     "wtforms.*",
     "playhouse.*",
-    "flask_restx"
+    "flask_restx",
+    "dynaconf"
 ]
 ignore_missing_imports = true
 
@@ -69,3 +70,8 @@ format = "isort . && blue ."
 pre_test = "task lint"
 test = "coverage run --source=coffee_and_wifi -m pytest -s -x -v"
 post_test = "coverage html"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
