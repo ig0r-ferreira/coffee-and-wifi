@@ -3,9 +3,6 @@ from http import HTTPStatus
 import pytest
 from flask.testing import FlaskClient
 
-from coffee_and_wifi.extensions.database import db_wrapper
-from coffee_and_wifi.extensions.database.models import Cafe
-
 
 def test_get_index(client: FlaskClient) -> None:
     response = client.get('/')
@@ -42,7 +39,10 @@ def test_add_cafe(client: FlaskClient) -> None:
         'power_rating': 5,
     }
     response = client.post('/add', data=cafe_data)
-    assert response.status_code == HTTPStatus.FOUND
+    data = response.get_data(as_text=True)
+
+    assert response.status_code == HTTPStatus.OK
+    assert 'Cafe created successfully.' in data
 
 
 @pytest.mark.parametrize('cafe_name', ['CAFE 1', 'cAfE 1', 'cafe 1', 'Cafe 1'])
@@ -61,9 +61,7 @@ def test_add_cafe_that_already_exists(
     cafe_data['cafe_name'] = cafe_name
 
     response = client.post('/add', data=cafe_data)
+    data = response.get_data(as_text=True)
 
     assert response.status_code == HTTPStatus.OK
-    assert (
-        'Error: Cafe with the given name already exists.'
-        in response.get_data(as_text=True)
-    )
+    assert 'Cafe with the given name already exists.' in data

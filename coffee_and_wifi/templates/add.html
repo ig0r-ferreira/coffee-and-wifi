@@ -4,17 +4,7 @@
 {% block content %}
 <main>
     <div class="breakpoint-lg mx-auto">
-        {% with errors = get_flashed_messages(category_filter=["error"]) %}
-        {% if errors %}
-            <ul class="list-group mb-4">
-            {% for error in errors %}
-                <li class="list-group-item list-group-item-danger">
-                    <strong>Error: {{ error }}</strong>
-                </li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        {% endwith %}
+        {% include 'components/notifications.html' %}
         <form action="{{ url_for('ui.add_cafe') }}" method="post" novalidate>
             {% if 'csrf_token' in form %}
                 {{ form.csrf_token }}
@@ -47,5 +37,6 @@
             {{ render_form_row([form.submit], button_style='custom') }} 
         </form>
     </div>
+    {{ render_static('js', 'js/script.js') }}
 </main>
 {% endblock content %}

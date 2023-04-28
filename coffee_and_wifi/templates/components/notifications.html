@@ -1,0 +1,11 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <ul class="notifications list-group mb-4">
+    {% for category, message in messages %}
+        <li class="list-group-item list-group-item-{{ category }}">
+            <strong>{{ message }}</strong>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endwith %}

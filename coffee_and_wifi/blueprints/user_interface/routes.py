@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, render_template, request
 from flask.typing import ResponseReturnValue
 
 from coffee_and_wifi.extensions.database import IntegrityError, db_wrapper
@@ -31,10 +31,11 @@ def add_cafe() -> ResponseReturnValue:
             if error_msg == 'UNIQUE constraint failed: cafe.name':
                 error_msg = 'Cafe with the given name already exists.'
 
-            flash(error_msg, 'error')
+            flash(error_msg, 'danger')
 
         else:
-            return redirect(url_for('.cafes'))
+            form = AddCafeForm(formdata=None)
+            flash('Cafe created successfully.', 'success')
 
     return render_template('add.html', form=form)
 
