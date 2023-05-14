@@ -1,7 +1,7 @@
 <div align="center">
     <h1>Coffee and Wi-fi ☕</h1>
     <div>
-        <img src="demo.gif"  alt="Coffee and Wi-fi Website">
+        <img src="docs/assets/website-demo.gif"  alt="Coffee and Wi-fi Website">
     </div>
 </div>
 
@@ -24,8 +24,8 @@ New:
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="40" alt="Python" title="Python">&ensp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" width="40" alt="Flask" title="Flask">&ensp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" width="40" alt="SQLite" title="SQLite">&ensp;
-    <img src="coffee_and_wifi/static/images/peewee-logo.svg" width="60" alt="Peewee" title="Peewee">&ensp;
-    <img src="coffee_and_wifi/static/images/dynaconf-logo.svg" width="40" alt="Dynaconf" title="Dynaconf">&ensp;
+    <img src="docs/assets/peewee-logo.svg" width="60" alt="Peewee" title="Peewee">&ensp;
+    <img src="docs/assets/dynaconf-logo.svg" width="40" alt="Dynaconf" title="Dynaconf">&ensp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytest/pytest-original.svg" width="40" alt="Pytest" title="Pytest">&ensp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" width="40" alt="HTML5" title="HTML5">&ensp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" width="40" alt="CSS3" title="CSS3">&ensp;
